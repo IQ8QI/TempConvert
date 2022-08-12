@@ -1,26 +1,13 @@
-import java.util.Arrays;
-
 public class TempConvert
 {
-    enum Unit { Celsius, Kelvin, Fahrenheit }
-
     public static void main(String[] args)
     {
-        //System.out.println(Arrays.toString(args));
-        //TempConvert -c -f 45
-        //TempConvert -k -c 78
-        //TempConvert --celsius --kelvin 500
-        //TempConvert -h
-        //TempConvert --help
 
-        if(args[0].equals("-h") || args[0].equals("--help") || args[0].equals("?"))
+        if(args[0].equals("-h") || args[0].equals("--help") || args[0].equals("?") || args[0].equals(""))
         {
             help();
             System.exit(0);
         }
-
-        Unit in;
-        Unit out;
 
         if(args[0].equals("-c") || args[0].equals("--celsius"))
         {
