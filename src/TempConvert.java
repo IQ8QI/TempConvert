@@ -3,7 +3,7 @@ public class TempConvert
     public static void main(String[] args)
     {
 
-        if(args[0].equals("-h") || args[0].equals("--help") || args[0].equals("?") || args[0].equals(""))
+        if(args.length == 0 || args[0].equals("-h") || args[0].equals("--help") || args[0].equals("?") || args[0].equals(""))
         {
             help();
             System.exit(0);
