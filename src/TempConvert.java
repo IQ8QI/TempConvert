@@ -1,64 +1,91 @@
+import java.util.ArrayList;
+import java.util.List;
+
 public class TempConvert
 {
     public static void main(String[] args)
     {
 
-        if(args.length == 0 || args[0].equals("-h") || args[0].equals("--help") || args[0].equals("?") || args[0].equals(""))
+        //If no input, or invalid number of parameters, or user asks for help, then show help and terminate
+        if(args.length != 3 || args[0].equals("-h") || args[0].equals("--help") || args[0].equals("?") || args[0].equals(""))
         {
             help();
-            System.exit(0);
         }
 
-        if(args[0].equals("-c") || args[0].equals("--celsius"))
+        //Get the parameters, and add them to params list
+        //Get temperature and add it to inputTemp
+        float inputTemp = Float.NaN;
+        List<String> params = new ArrayList<>(2);
+        for (String arg : args)
+            if (arg.charAt(0) == '-')
+                params.add(arg);
+            else {
+                try {
+                    inputTemp = Float.parseFloat(arg);
+                } catch (Exception e) {
+                    unknownInput(arg);
+                }
+            }
+
+        /*Not needed???
+        if(Float.isNaN(inputTemp))
         {
-            if(args[1].equals("-f") || args[1].equals("--fahrenheit"))
-            {
-                System.out.println(Convert.celsiusToFahrenheit(Float.parseFloat(args[2])));
-                System.exit(0);
-            }
-            else if(args[1].equals("-k") || args[1].equals("--kelvin"))
-            {
-                System.out.println(Convert.celsiusToKelvin(Float.parseFloat(args[2])));
-                System.exit(0);
-            }
-            else
-                unknownInput();
+            unknownInput(args[i]);
         }
-        else if(args[0].equals("-f") || args[0].equals("--fahrenheit"))
+         */
+
+        //Decide what kind of conversion operation should be done on input temperature
+        if(params.get(0).equals("-c") || params.get(0).equals("--celsius") || params.get(0).equals("--c") || params.get(0).equals("-celsius"))
         {
-            if(args[1].equals("-c") || args[1].equals("--celsius"))
+            if(params.get(1).equals("-f") || params.get(1).equals("--fahrenheit") || params.get(1).equals("--f") || params.get(1).equals("-fahrenheit"))
             {
-                System.out.println(Convert.fahrenheitToCelsius(Float.parseFloat(args[2])));
+                System.out.println(Convert.celsiusToFahrenheit(inputTemp));
                 System.exit(0);
             }
-            else if(args[1].equals("-k") || args[1].equals("--kelvin"))
+            else if(params.get(1).equals("-k") || params.get(1).equals("--kelvin") || params.get(1).equals("--k") || params.get(1).equals("-kelvin"))
             {
-                System.out.println(Convert.fahrenheitToKelvin(Float.parseFloat(args[2])));
+                System.out.println(Convert.celsiusToKelvin(inputTemp));
                 System.exit(0);
             }
             else
-                unknownInput();
+                unknownInput(params.get(1));
         }
-        else if(args[0].equals("-k") || args[0].equals("--kelvin"))
+        else if(params.get(0).equals("-f") || params.get(0).equals("--fahrenheit") || params.get(0).equals("--f") || params.get(0).equals("-fahrenheit"))
         {
-            if(args[1].equals("-f") || args[1].equals("--fahrenheit"))
+            if(params.get(1).equals("-c") || params.get(1).equals("--celsius") || params.get(1).equals("--c") || params.get(1).equals("-celsius"))
             {
-                System.out.println(Convert.kelvinToFahrenheit(Float.parseFloat(args[2])));
+                System.out.println(Convert.fahrenheitToCelsius(inputTemp));
                 System.exit(0);
             }
-            else if(args[1].equals("-c") || args[1].equals("--celsius"))
+            else if(params.get(1).equals("-k") || params.get(1).equals("--kelvin") || params.get(1).equals("--k") || params.get(1).equals("-kelvin"))
             {
-                System.out.println(Convert.kelvinToCelsius(Float.parseFloat(args[2])));
+                System.out.println(Convert.fahrenheitToKelvin(inputTemp));
                 System.exit(0);
             }
             else
-                unknownInput();
+                unknownInput(params.get(1));
+        }
+        else if(params.get(0).equals("-k") || params.get(0).equals("--kelvin") || params.get(0).equals("--k") || params.get(0).equals("-kelvin"))
+        {
+            if(params.get(1).equals("-f") || params.get(1).equals("--fagrenheit") || params.get(1).equals("--f") || params.get(1).equals("-fahrenheit"))
+            {
+                System.out.println(Convert.kelvinToFahrenheit(inputTemp));
+                System.exit(0);
+            }
+            else if(params.get(1).equals("-c") || params.get(1).equals("--celsius") || params.get(1).equals("--c") || params.get(1).equals("-celsius"))
+            {
+                System.out.println(Convert.kelvinToCelsius(inputTemp));
+                System.exit(0);
+            }
+            else
+                unknownInput(params.get(1));
         }
         else
-            unknownInput();
+            unknownInput(params.get(0));
 
     }
 
+    //Function displays application help
     public static void help()
     {
         System.out.println(
@@ -77,11 +104,13 @@ public class TempConvert
                         BUG REPORT
                         \tTODO"""
         );
+        System.exit(0);
     }
 
-    public static void unknownInput()
+    //Error message giving the place were is the unknown parameter
+    public static void unknownInput(String input)
     {
-        System.out.println("Unknown input format\nExample usage:\nTempConvert -c -k 28");
+        System.out.println("ERROR\nUnknown input format at:" + input + "\nExample usage:\nTempConvert -c -k 28.5");
         System.exit(-1);
     }
 
