@@ -1,3 +1,5 @@
+package TempConvert;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,7 +17,7 @@ public class TempConvert
         //Get the input and output unit parameters, and add them to units list
         //Get temperature and add it to inputTemp
         //Get precision
-        float inputTemp = Float.NaN;
+        double inputTemp = Double.NaN;
         int precision = 2;
         List<String> units = new ArrayList<>(2);
         for(int i = 0; i < args.length; i++)
@@ -33,7 +35,7 @@ public class TempConvert
                 units.add(args[i]);
             else
                 try {
-                    inputTemp = Float.parseFloat(args[i]);
+                    inputTemp = Double.parseDouble(args[i]);
                 } catch (Exception e) {
                     unknownInput(args[i]);
                 }
@@ -124,38 +126,4 @@ public class TempConvert
         System.exit(-1);
     }
 
-}
-
-//Class Convert contain methods to convert temperature between units
-class Convert
-{
-    public static float celsiusToFahrenheit(float input)
-    {
-        return ((input * 9f) / 5f) + 32;
-    }
-
-    public static float celsiusToKelvin(float input)
-    {
-        return input + 273.15f;
-    }
-
-    public static float fahrenheitToCelsius(float input)
-    {
-        return ((input - 32) * 5f) / 9f;
-    }
-
-    public static float fahrenheitToKelvin(float input)
-    {
-        return celsiusToKelvin(fahrenheitToCelsius(input));
-    }
-
-    public static float kelvinToCelsius(float input)
-    {
-        return input - 273.15f;
-    }
-
-    public static float kelvinToFahrenheit(float input)
-    {
-        return celsiusToFahrenheit(kelvinToCelsius(input));
-    }
 }
