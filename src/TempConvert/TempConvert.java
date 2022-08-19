@@ -19,21 +19,32 @@ public class TempConvert
         //Get precision
         double inputTemp = Double.NaN;
         int precision = 2;
+        String fromUnit = "";
+        String toUnit = "";
         List<String> units = new ArrayList<>(2);
-        for(int i = 0; i < args.length; i++)
-        {
-            if(args[i].equals("--precision") || args[i].equals("-p") || args[i].equals("-precision") || args[i].equals("--p")) {
-                try {
-                    precision = Integer.parseInt(args[i + 1]);
-                    if(precision < 0)
-                        throw new Exception();
-                } catch (Exception e) {
-                    unknownInput(args[i+1]);
-                }
-                i++;
-            } else if (args[i].charAt(0) == '-')
-                units.add(args[i]);
-            else
+        for(int i = 0; i < args.length; i++) {
+            //If input is a parameter
+            //Remove all dashes
+            if (args[i].charAt(0) == '-') {
+                while(args[i].charAt(0) == '-')
+                    args[i] = args[i].substring(1);
+                args[i] = args[i].substring(0, 1);
+                if(args[i].equals("p")) {
+                    try {
+                        precision = Integer.parseInt(args[i + 1]);
+                        if(precision < 0)
+                            throw new Exception();
+                    } catch (Exception e) {
+                        unknownInput(args[i+1]);
+                    }
+                    i++;
+                } else if(fromUnit.equals(""))
+                    fromUnit = args[i].toLowerCase();
+                else if(!fromUnit.equals(""))
+                    toUnit = args[i].toLowerCase();
+                else
+                    unknownInput(args[i]);
+            } else
                 try {
                     inputTemp = Double.parseDouble(args[i]);
                 } catch (Exception e) {
@@ -43,53 +54,53 @@ public class TempConvert
 
 
         //Decide what kind of conversion operation should be done on input temperature
-        if(units.get(0).equals("-c") || units.get(0).equals("--celsius") || units.get(0).equals("--c") || units.get(0).equals("-celsius"))
+        if(fromUnit.equals("c"))
         {
-            if(units.get(1).equals("-f") || units.get(1).equals("--fahrenheit") || units.get(1).equals("--f") || units.get(1).equals("-fahrenheit"))
+            if(toUnit.equals("f"))
             {
                 System.out.printf("%." + precision + "f\n", Convert.celsiusToFahrenheit(inputTemp));
                 System.exit(0);
             }
-            else if(units.get(1).equals("-k") || units.get(1).equals("--kelvin") || units.get(1).equals("--k") || units.get(1).equals("-kelvin"))
+            else if(toUnit.equals("k"))
             {
                 System.out.printf("%." + precision + "f\n", Convert.celsiusToKelvin(inputTemp));
                 System.exit(0);
             }
             else
-                unknownInput(units.get(1));
+                unknownInput(toUnit);
         }
-        else if(units.get(0).equals("-f") || units.get(0).equals("--fahrenheit") || units.get(0).equals("--f") || units.get(0).equals("-fahrenheit"))
+        else if(fromUnit.equals("f"))
         {
-            if(units.get(1).equals("-c") || units.get(1).equals("--celsius") || units.get(1).equals("--c") || units.get(1).equals("-celsius"))
+            if(toUnit.equals("c"))
             {
                 System.out.printf("%." + precision + "f\n", Convert.fahrenheitToCelsius(inputTemp));
                 System.exit(0);
             }
-            else if(units.get(1).equals("-k") || units.get(1).equals("--kelvin") || units.get(1).equals("--k") || units.get(1).equals("-kelvin"))
+            else if(toUnit.equals("k"))
             {
                 System.out.printf("%." + precision + "f\n", Convert.fahrenheitToKelvin(inputTemp));
                 System.exit(0);
             }
             else
-                unknownInput(units.get(1));
+                unknownInput(toUnit);
         }
-        else if(units.get(0).equals("-k") || units.get(0).equals("--kelvin") || units.get(0).equals("--k") || units.get(0).equals("-kelvin"))
+        else if(fromUnit.equals("k"))
         {
-            if(units.get(1).equals("-f") || units.get(1).equals("--fagrenheit") || units.get(1).equals("--f") || units.get(1).equals("-fahrenheit"))
+            if(toUnit.equals("f"))
             {
                 System.out.printf("%." + precision + "f\n", Convert.kelvinToFahrenheit(inputTemp));
                 System.exit(0);
             }
-            else if(units.get(1).equals("-c") || units.get(1).equals("--celsius") || units.get(1).equals("--c") || units.get(1).equals("-celsius"))
+            else if(toUnit.equals("c"))
             {
                 System.out.printf("%." + precision + "f\n", Convert.kelvinToCelsius(inputTemp));
                 System.exit(0);
             }
             else
-                unknownInput(units.get(1));
+                unknownInput(toUnit);
         }
         else
-            unknownInput(units.get(0));
+            unknownInput(fromUnit);
 
     }
 
