@@ -1,8 +1,5 @@
 package TempConvert;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class TempConvert
 {
     public static void main(String[] args)
@@ -11,7 +8,7 @@ public class TempConvert
         //If no input, or invalid number of parameters, or user asks for help, then show help and terminate
         if( !(args.length == 3 || args.length == 5) || args[0].equals("-h") || args[0].equals("--help") || args[0].equals("?") || args[0].equals(""))
         {
-            help();
+            terminateHelp();
         }
 
         //Get the input and output unit parameters, and add them to units list
@@ -21,7 +18,7 @@ public class TempConvert
         int precision = 2;
         String fromUnit = "";
         String toUnit = "";
-        List<String> units = new ArrayList<>(2);
+
         for(int i = 0; i < args.length; i++) {
             //If input is a parameter
             //Remove all dashes
@@ -35,7 +32,7 @@ public class TempConvert
                         if(precision < 0)
                             throw new Exception();
                     } catch (Exception e) {
-                        unknownInput(args[i+1]);
+                        terminateUnknownInput(args[i+1]);
                     }
                     i++;
                 } else if(fromUnit.equals(""))
@@ -43,69 +40,50 @@ public class TempConvert
                 else if(!fromUnit.equals(""))
                     toUnit = args[i].toLowerCase();
                 else
-                    unknownInput(args[i]);
+                    terminateUnknownInput(args[i]);
             } else
                 try {
                     inputTemp = Double.parseDouble(args[i]);
                 } catch (Exception e) {
-                    unknownInput(args[i]);
+                    terminateUnknownInput(args[i]);
                 }
         }
 
 
         //Decide what kind of conversion operation should be done on input temperature
+        String result = "";
         if(fromUnit.equals("c"))
-        {
             if(toUnit.equals("f"))
-            {
-                System.out.printf("%." + precision + "f\n", Convert.celsiusToFahrenheit(inputTemp));
-                System.exit(0);
-            }
+                result = String.format("%." + precision + "f\n", Convert.celsiusToFahrenheit(inputTemp));
             else if(toUnit.equals("k"))
-            {
-                System.out.printf("%." + precision + "f\n", Convert.celsiusToKelvin(inputTemp));
-                System.exit(0);
-            }
+                result = String.format("%." + precision + "f\n", Convert.celsiusToKelvin(inputTemp));
             else
-                unknownInput(toUnit);
-        }
+                terminateUnknownInput(toUnit);
         else if(fromUnit.equals("f"))
-        {
             if(toUnit.equals("c"))
-            {
-                System.out.printf("%." + precision + "f\n", Convert.fahrenheitToCelsius(inputTemp));
-                System.exit(0);
-            }
+                result = String.format("%." + precision + "f\n", Convert.fahrenheitToCelsius(inputTemp));
             else if(toUnit.equals("k"))
-            {
-                System.out.printf("%." + precision + "f\n", Convert.fahrenheitToKelvin(inputTemp));
-                System.exit(0);
-            }
+                result = String.format("%." + precision + "f\n", Convert.fahrenheitToKelvin(inputTemp));
             else
-                unknownInput(toUnit);
-        }
+                terminateUnknownInput(toUnit);
         else if(fromUnit.equals("k"))
-        {
             if(toUnit.equals("f"))
-            {
-                System.out.printf("%." + precision + "f\n", Convert.kelvinToFahrenheit(inputTemp));
-                System.exit(0);
-            }
+                result = String.format("%." + precision + "f\n", Convert.kelvinToFahrenheit(inputTemp));
             else if(toUnit.equals("c"))
-            {
-                System.out.printf("%." + precision + "f\n", Convert.kelvinToCelsius(inputTemp));
-                System.exit(0);
-            }
+                result = String.format("%." + precision + "f\n", Convert.kelvinToCelsius(inputTemp));
             else
-                unknownInput(toUnit);
-        }
+                terminateUnknownInput(toUnit);
         else
-            unknownInput(fromUnit);
+            terminateUnknownInput(fromUnit);
+
+        if(result.equals(""))
+            terminateHelp();
+        System.out.print(result);
 
     }
 
     //Function displays application help
-    public static void help()
+    public static void terminateHelp()
     {
         System.out.println(
                 """
@@ -131,10 +109,9 @@ public class TempConvert
     }
 
     //Error message giving the place were is the unknown parameter
-    public static void unknownInput(String input)
+    public static void terminateUnknownInput(String input)
     {
         System.out.println("ERROR\nUnknown input format at:" + input + "\nExample usage:\nTempConvert -c -k 28.5\nTempConvert --fahrenheit --kelvin 13 --precision 4");
         System.exit(-1);
     }
-
 }
